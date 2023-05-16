@@ -68,6 +68,7 @@ def create_preprocessor(bin_features, ohe_features, std_features, norm_features)
 
 
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 
 def plot_roc(model, X, y):
@@ -77,19 +78,26 @@ def plot_roc(model, X, y):
     for th in thresholds:
         # predict outputfor different thresholds
         y_pred = model.predict_proba(X)
-        y_pred = np.where(y_pred >= th, 1, 0)[:, 1]
         # tpr, sum where it is true
+        y_pred_pos = np.where(y_pred >= th, 1, 0)[:, 1]
         idx_true = np.where(y == 1)[0]
-        tpr_val = sum(y_pred[idx_true])/sum(y)
+        tpr_val = sum(y_pred_pos[idx_true])/sum(y_pred_pos)
         # fpr, sum where should be false but is true
+        y_pred_neg = np.where(y_pred >= th, 1, 0)[:, 1]
         idx_false = np.where(y == 0)[0]
-        fpr_val = sum(y_pred[idx_false])/sum(y)
+        fpr_val = sum(y_pred_neg[idx_false])/sum(y_pred_neg)
         # geometric mean to pick best threshold 
         gmean = tpr_val * (1 - fpr_val)
+        print(tpr_val, fpr_val, gmean)
+        try: 
+            gmean = math.sqrt(gmean)    
+        except Exception:
+            continue
         tpr.append(tpr_val), fpr.append(fpr_val), gmeans.append(gmean)
 
     idx = np.argmax(gmeans)
-    print(f'Best threshold: {thresholds[idx]}')
+    print(f'Best threshold: {round(thresholds[idx], 3)}, fpr: {round(fpr[idx], 3)}, tpr: {round(tpr[idx], 3)}')
+
 
     fig, ax = plt.subplots(1, 1, figsize=(6, 4))
     ax.plot(fpr, tpr)
