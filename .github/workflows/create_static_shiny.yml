@@ -1,4 +1,4 @@
-name: run data_action
+name: run shiny_action
 
 on:
     workflow_dispatch:
