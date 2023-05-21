@@ -1,0 +1,38 @@
+name: run data_action
+
+on:
+    schedule:
+        - cron: '5 6 * * *' # run once a day at 06:05
+    
+jobs:
+  build:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-20.04
+
+    steps:
+      # checkout the repository content to github runner
+      - name: checkout repo content
+        uses: actions/checkout@v3
+
+    # install the python version needed, install packages 
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.10.10'
+            cache: 'pip'
+      - run: pip install -r requirements.txt
+
+      # update csv
+      - name: update csv 
+        working-directory: ./src
+        run: python download_data.py -p ../shinydata
+
+      - uses: actions/checkout@v3
+      - run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .
+            git commit -m "Updated data"
+            git push

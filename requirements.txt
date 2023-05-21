@@ -1,0 +1,13 @@
+numpy
+matplotlib
+pandas
+pytest
+plotly
+scikit-learn
+ipykernel
+seaborn
+jupyter
+shiny
+shinylive
+gdown
+pyodide-py
