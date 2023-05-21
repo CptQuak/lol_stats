@@ -29,10 +29,16 @@ jobs:
         working-directory: ./src
         run: python download_data.py -p ../shinydata
 
-      - uses: actions/checkout@v3
-      - run: |
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git add .
-            git commit -m "Updated data"
-            git push
+      # create pull requrest on specific branch
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Update data
+          committer: CptQuak <kamilkulesza5@gmail.com>
+          body: |
+              Update data
+          title: '[Update] data'
+          labels: data, automated pr
+          assignees: CptQuak
+          reviewers: CptQuak
+          branch: action_data
