@@ -2,6 +2,7 @@ name: run shiny_action
 
 on:
     push:
+        branches: ['main']
         paths: ['app/**']
     workflow_dispatch:
     
