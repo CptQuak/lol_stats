@@ -1,11 +1,12 @@
 from shiny import App, render, ui, reactive
-gdown
+import pyodide.http
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 plt.style.use('ggplot')
 
+url = 
 
 def get_data_by_year(year, path_data = '../data'):
     datasets = os.listdir(f'{path_data}')
@@ -47,8 +48,7 @@ app_ui = ui.page_fluid(
                 {x: x for x in ['total_kills', 'total_deaths', 'total_assists', 'highest_dpm', 'highest_cs']},
                 selected='top',
             ),
-        ),
-        
+        ), 
         ui.panel_main(
             ui.output_plot("plot"),
             ui.output_table('topstats')
