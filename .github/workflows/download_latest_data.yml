@@ -1,7 +1,6 @@
 name: run data_action
 
 on:
-    push:
     schedule:
         - cron: '5 6 * * *' # run once a day at 06:05
     
