@@ -25,6 +25,9 @@ jobs:
             python-version: '3.10.10'
             cache: 'pip'
       - run: pip install -r requirements.txt
+
+      - name: build static files
+        run: shinylive export app docs
     
       # create pull requrest on specific branch
       - name: Create Pull Request
