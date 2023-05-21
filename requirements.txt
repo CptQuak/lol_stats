@@ -10,3 +10,4 @@ jupyter
 shiny
 shinylive
 gdown
+pyodide

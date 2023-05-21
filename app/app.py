@@ -1,21 +1,14 @@
 from shiny import App, render, ui, reactive
-import pyodide.http
-import os
+from io import StringIO
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from shiny_download import get_url
 plt.style.use('ggplot')
 
-url = 
-
-def get_data_by_year(year, path_data = '../data'):
-    datasets = os.listdir(f'{path_data}')
-    data_file = [f'{path_data}/{data}' for data in datasets if int(data[:4]) == year]
-    df = pd.read_csv(*data_file)
-    return df
-
+url = r'https://raw.githubusercontent.com/CptQuak/lol_stats/shiny-app/shinydata/lol.csv'
 relevant_columns = ['playername', 'league', 'position', 'teamname', 'kills', 'deaths', 'assists', 'dpm', 'total cs']
-df = get_data_by_year(2023)
+
 
 ##########################################################
 app_ui = ui.page_fluid(    
@@ -58,10 +51,25 @@ app_ui = ui.page_fluid(
 
 
 def server(input, output, session):
+    reactive_df = reactive.Value(pd.DataFrame())
+    
+    @reactive.Calc
+    async def get_data():
+        response = await get_url(url, 'string')
+        data = StringIO(response.data)
+        return data
+    
+    @reactive.Effect
+    async def _():
+        data = await get_data()
+        reactive_df.set(pd.read_csv(data, header=0))
+        print(reactive_df().head())
+
     @output
     @render.plot
     def plot():
         query_position = [input.position()] if input.position() != 'all' else ['top', 'jgl', 'mid', 'bot', 'sup']
+        df = reactive_df()
         data = (
             df
             [(df['league'].isin(input.tournaments())) & (df['position'].isin(query_position))]
@@ -81,13 +89,13 @@ def server(input, output, session):
         fig, ax = plt.subplots(1, 1, figsize=(8, 4))
         # im = ax.imshow(data2d, cmap=input.cmap(), vmin=input.range()[0], vmax=input.range()[1])
         sns.barplot(data, x=input.var(), y='playername', color='#12b6f8', ax=ax)
-        
         return fig
 
     @output
     @render.table
     def topstats():
         query_position = [input.position()] if input.position() != 'all' else ['top', 'jgl', 'mid', 'bot', 'sup']
+        df = reactive_df()
         data = (
             df
             [(df['league'].isin(input.tournaments())) & (df['position'].isin(query_position))]
@@ -104,6 +112,5 @@ def server(input, output, session):
             .head(input.num_players())
         )
         return data
-
 
 app = App(app_ui, server)
