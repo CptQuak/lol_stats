@@ -12,15 +12,15 @@ relevant_columns = ['playername', 'league', 'position', 'teamname', 'kills', 'de
 
 ##########################################################
 app_ui = ui.page_fluid(    
-    ui.panel_title('League of legends 2023 season players stats'),
-    ui.navset_tab_card(
-        # elements ----
-        ui.nav("a", "tab a content"),
-        ui.nav("b", "tab b content"),
-    ),
-    ui.markdown('''
-        App showing statistics describing performance of professional League of Legends players
-    '''),
+    ui.panel_title('League of Legends 2023 season player statistics'),
+#     ui.navset_tab_card(
+#         elements ----
+#         ui.nav("a", "tab a content"),
+#         ui.nav("b", "tab b content"),
+#     ),
+#     ui.markdown('''
+#         App showing statistics describing performance of professional League of Legends players
+#     '''),
     ui.layout_sidebar(
         ui.panel_sidebar(
             ui.input_numeric('num_players', 'Number of players', value=10),
