@@ -1,6 +1,7 @@
 # lol_stats
 
-Analysis of competitive League of Legends games over the period of 2015-2024.
+Analysis of competitive League of Legends games from 2015-2024.
+https://cptquak.github.io/lol_stats/
 
 ---
 Source of competetive data: https://oracleselixir.com/tools/downloads
